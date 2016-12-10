@@ -41,10 +41,11 @@ void ofApp::setup(){
     ));
     mesh1Manipulator.setRotation(ofQuaternion(
        Settings::getFloat("mesh/angle"), ofVec3f(
-       Settings::getFloat("mesh/xRotation"),
-       Settings::getFloat("mesh/yRotation"),
-       Settings::getFloat("mesh/zRotation"))
-   ));
+           Settings::getFloat("mesh/xRotation"),
+           Settings::getFloat("mesh/yRotation"),
+           Settings::getFloat("mesh/zRotation"))
+        )
+   );
    
     mergedManipulator = ofxManipulator();
     mergedManipulator.setManipulatorType(ofxManipulator::MANIPULATOR_NONE);
@@ -54,21 +55,17 @@ void ofApp::setup(){
         Settings::getFloat("merged/zTranslation")
     ));
     mergedManipulator.setRotation(ofQuaternion(
-    Settings::getFloat("merged/angle"), ofVec3f(
-        Settings::getFloat("merged/xRotation"),
-        Settings::getFloat("merged/yRotation"),
-        Settings::getFloat("merged/zRotation"))
-    ));
+        Settings::getFloat("merged/angle"), ofVec3f(
+            Settings::getFloat("merged/xRotation"),
+            Settings::getFloat("merged/yRotation"),
+            Settings::getFloat("merged/zRotation"))
+        )
+    );
     
     yThreshold.set(Settings::getFloat("yThreshold"));
 
     showMerged = false;
-    showGrid = false;
-
-//    slider = new ofxDatGuiSlider(yThreshold.set("Y Threshold", 500));
-//    slider->setWidth(ofGetWidth() * .2, .2);
-//    slider->setPosition(10, 50);
-    
+    showGrid = false;    
 }
 
 //--------------------------------------------------------------
@@ -170,10 +167,7 @@ void ofApp::draw(){
                 ofVec3f axis;
                 auto quat = mesh1Manipulator.getRotation();
                 quat.getRotate(angle, axis);
-                //            cout << typeid(quat).name() << endl;
-                //            quat.getRotate(angle, axis);
                 ofRotate(angle, axis.x, axis.y, axis.z);
-                //            ofRotate(mesh1Manipulator.getRotation().getEuler());
                 ofTranslate(mesh1Manipulator.getTranslation());
                 mesh1.draw();
                 ofPopMatrix();
@@ -208,10 +202,6 @@ void ofApp::draw(){
     
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
     ofDrawBitmapStringHighlight("Device Count : " + ofToString(ofxMultiKinectV2::getDeviceCount()), 10, 40);
-    
-//    slider->draw();
-
-    
 }
 
 //--------------------------------------------------------------

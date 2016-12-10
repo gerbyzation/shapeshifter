@@ -1,4 +1,3 @@
-ofxDatGui
 ofxJSON
 ofxJsonSettings
 ofxManipulator

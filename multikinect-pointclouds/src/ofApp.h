@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxMultiKinectV2.h"
-#include "ofxDatGui.h"
 #include "ofxManipulator.h"
 #include "ofxJSONSettings.h"
 
