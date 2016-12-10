@@ -36,5 +36,7 @@ class ofApp : public ofBaseApp{
     
     bool showGrid;
 
-    ofxManipulator gizmo;
+    ofxManipulator mesh1Manipulator;
+    ofxManipulator mergedManipulator;
+    ofxManipulator::MANIPULATOR_TYPE previous;
 };

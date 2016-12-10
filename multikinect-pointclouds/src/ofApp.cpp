@@ -32,20 +32,34 @@ void ofApp::setup(){
     ecam.setDistance(200);
     camMouseInput = true;
 
-    gizmo = ofxManipulator();
-    gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_NONE);
-    gizmo.setTranslation(ofVec3f(
-        Settings::getFloat("xTranslation"),
-        Settings::getFloat("yTranslation"),
-        Settings::getFloat("zTranslation")
+    mesh1Manipulator = ofxManipulator();
+    mesh1Manipulator.setManipulatorType(ofxManipulator::MANIPULATOR_NONE);
+    mesh1Manipulator.setTranslation(ofVec3f(
+        Settings::getFloat("mesh/xTranslation"),
+        Settings::getFloat("mesh/yTranslation"),
+        Settings::getFloat("mesh/zTranslation")
     ));
-    gizmo.setRotation(ofQuaternion(
-       Settings::getFloat("angle"), ofVec3f(
-       Settings::getFloat("xRotation"),
-       Settings::getFloat("yRotation"),
-       Settings::getFloat("zRotation"))
+    mesh1Manipulator.setRotation(ofQuaternion(
+       Settings::getFloat("mesh/angle"), ofVec3f(
+       Settings::getFloat("mesh/xRotation"),
+       Settings::getFloat("mesh/yRotation"),
+       Settings::getFloat("mesh/zRotation"))
    ));
    
+    mergedManipulator = ofxManipulator();
+    mergedManipulator.setManipulatorType(ofxManipulator::MANIPULATOR_NONE);
+    mergedManipulator.setTranslation(ofVec3f(
+        Settings::getFloat("merged/xTranslation"),
+        Settings::getFloat("merged/yTranslation"),
+        Settings::getFloat("merged/zTranslation")
+    ));
+    mergedManipulator.setRotation(ofQuaternion(
+    Settings::getFloat("merged/angle"), ofVec3f(
+        Settings::getFloat("merged/xRotation"),
+        Settings::getFloat("merged/yRotation"),
+        Settings::getFloat("merged/zRotation"))
+    ));
+
     showMerged = false;
     showGrid = false;
     
@@ -66,10 +80,10 @@ void ofApp::update(){
                     float dist = kinect0.getDistanceAt(x, y);
                     if(dist > 50 && dist < 500) {
                         ofVec3f pt = kinect0.getWorldCoordinateAt(x, y, dist);
-                        
+                        ofMatrix4x4 corr = ofMatrix4x4().newScaleMatrix(-1.0, 1.0, -1.0);
                         ofColor c(0, 0, 255);
                         mesh0.addColor(c);
-                        mesh0.addVertex(pt);
+                        mesh0.addVertex(pt * corr);
                     }
                 }
             }
@@ -89,10 +103,11 @@ void ofApp::update(){
                     float dist = kinect1.getDistanceAt(x, y);
                     if(dist > 50 && dist < 500) {
                         ofVec3f pt = kinect1.getWorldCoordinateAt(x, y, dist);
+                        ofMatrix4x4 corr = ofMatrix4x4().newScaleMatrix(-1.0, 1.0, -1.0);
                         
                         ofColor c(255, 0, 0);
                         mesh1.addColor(c);
-                        mesh1.addVertex(pt);
+                        mesh1.addVertex(pt * corr);
                     }
                 }
             }
@@ -103,10 +118,8 @@ void ofApp::update(){
         merged.clear();
         merged.addVertices(mesh0.getVertices());
         if (mesh1.hasVertices()) {
-            cout << "merging clouds" << endl;
-//            merged.addVertices(mesh1.getVertices());
             auto vertices = mesh1.getVertices();
-            ofMatrix4x4 transf = gizmo.getMatrix();
+            ofMatrix4x4 transf = mesh1Manipulator.getMatrix();
             for (int i = 0 ; i < mesh1.getNumVertices(); i++) {
                 ofVec3f vertex = vertices[i] * transf;
                 merged.addVertex(vertex);
@@ -134,39 +147,55 @@ void ofApp::draw(){
         }
 
         if (!showMerged) {
-            ofPushMatrix();
+            
             if (mesh0.getVertices().size()) {
                 mesh0.draw();
             }
             if (mesh1.getVertices().size()) {
-                ofScale(gizmo.getScale());
-                ofRotateX(gizmo.getRotation().x());
+                ofPushMatrix();
+                ofScale(mesh1Manipulator.getScale());
                 float angle;
                 ofVec3f axis;
-                auto quat = gizmo.getRotation();
+                auto quat = mesh1Manipulator.getRotation();
                 quat.getRotate(angle, axis);
                 //            cout << typeid(quat).name() << endl;
                 //            quat.getRotate(angle, axis);
                 ofRotate(angle, axis.x, axis.y, axis.z);
-                //            ofRotate(gizmo.getRotation().getEuler());
-                ofTranslate(gizmo.getTranslation());
+                //            ofRotate(mesh1Manipulator.getRotation().getEuler());
+                ofTranslate(mesh1Manipulator.getTranslation());
                 mesh1.draw();
+                ofPopMatrix();
+                mesh1Manipulator.draw(ecam);
             }
-            ofPopMatrix();
+            
         } else {
             if (merged.getVertices().size()) {
+                ofPushMatrix();
+                ofScale(mergedManipulator.getScale());
+                float angle;
+                ofVec3f axis;
+                ofQuaternion quaternate = mergedManipulator.getRotation();
+                quaternate.getRotate(angle, axis);
+                ofRotate(angle, axis.x, axis.y, axis.z);
+                ofTranslate(mergedManipulator.getTranslation());
                 merged.draw();
+                ofPopMatrix();
+                mergedManipulator.draw(ecam);
             }
         }
-        gizmo.draw(ecam);
+        ofSpherePrimitive sphere = ofSpherePrimitive();
+        sphere.setRadius(50);
+        sphere.setPosition(100, 100, 100);
+        sphere.draw();
+        
         ecam.end();
         ofPopStyle();
-        
-        
     }
     
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
     ofDrawBitmapStringHighlight("Device Count : " + ofToString(ofxMultiKinectV2::getDeviceCount()), 10, 40);
+    
+
     
 }
 
@@ -176,29 +205,52 @@ void ofApp::keyPressed(int key){
         camMouseInput = !camMouseInput;
         if (camMouseInput) {
             ecam.enableMouseInput();
-            gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_NONE);
+            mesh1Manipulator.setManipulatorType(ofxManipulator::MANIPULATOR_NONE);
+            mergedManipulator.setManipulatorType(ofxManipulator::MANIPULATOR_NONE);
         } else if (!camMouseInput) {
             ecam.disableMouseInput();
-            gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_TRANSLATION);
+            mesh1Manipulator.setManipulatorType(previous);
+            mergedManipulator.setManipulatorType(previous);
         }
     } else if (key == '1') {
         ecam.disableMouseInput();
-        gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_TRANSLATION);
+        mesh1Manipulator.setManipulatorType(ofxManipulator::MANIPULATOR_TRANSLATION);
+        mergedManipulator.setManipulatorType(ofxManipulator::MANIPULATOR_TRANSLATION);
+        previous = ofxManipulator::MANIPULATOR_TRANSLATION;
     } else if (key == '2') {
         ecam.disableMouseInput();
-        gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_ROTATION);
+        mesh1Manipulator.setManipulatorType(ofxManipulator::MANIPULATOR_ROTATION);
+        mergedManipulator.setManipulatorType(ofxManipulator::MANIPULATOR_ROTATION);
+        previous = ofxManipulator::MANIPULATOR_ROTATION;
     } else if (key == 's') {
-        Settings::getFloat("xTranslation") = gizmo.getTranslation().x;
-        Settings::getFloat("yTranslation") = gizmo.getTranslation().y;
-        Settings::getFloat("zTranslation") = gizmo.getTranslation().z;
-        ofQuaternion rotation = gizmo.getRotation();
+        // Save transformation for mesh1
+        Settings::getFloat("mesh/xTranslation") = mesh1Manipulator.getTranslation().x;
+        Settings::getFloat("mesh/yTranslation") = mesh1Manipulator.getTranslation().y;
+        Settings::getFloat("mesh/zTranslation") = mesh1Manipulator.getTranslation().z;
+        ofQuaternion rotation = mesh1Manipulator.getRotation();
         float angle;
         ofVec3f axis;
         rotation.getRotate(angle, axis);
-        Settings::getFloat("angle") = angle;
-        Settings::getFloat("xRotation") = axis.x;
-        Settings::getFloat("yRotation") = axis.y;
-        Settings::getFloat("zRotation") = axis.z;
+        Settings::getFloat("mesh/angle") = angle;
+        Settings::getFloat("mesh/xRotation") = axis.x;
+        Settings::getFloat("mesh/yRotation") = axis.y;
+        Settings::getFloat("mesh/zRotation") = axis.z;
+        
+        // Save transformation for merged mesh
+        Settings::getFloat("merged/xTranslation") = mergedManipulator.getTranslation().x;
+        Settings::getFloat("merged/yTranslation") = mergedManipulator.getTranslation().y;
+        Settings::getFloat("merged/zTranslation") = mergedManipulator.getTranslation().z;
+        
+        ofQuaternion rotationMerged = mergedManipulator.getRotation();
+        float angleMerged;
+        ofVec3f axisMerged;
+        rotationMerged.getRotate(angleMerged, axisMerged);
+        Settings::getFloat("merged/angle") = angleMerged;
+        Settings::getFloat("merged/xRotation") = axisMerged.x;
+        Settings::getFloat("merged/yRotation") = axisMerged.y;
+        Settings::getFloat("merged/zRotation") = axisMerged.z;
+        
+        // save to file
         Settings::get().save("settings.json");
     } else if (key == 'm') {
         showMerged = !showMerged;

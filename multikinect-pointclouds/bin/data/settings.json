@@ -1,10 +1,21 @@
 {
-   "angle" : 6.48633861541748,
-   "xRotation" : -1,
-   "xTranslation" : -237.4204711914062,
-   "yRotation" : 0,
-   "yTranslation" : 0,
-   "zRotation" : 0,
-   "zTranslation" : 0
+   "merged" : {
+      "angle" : 3.583885669708252,
+      "xRotation" : 1,
+      "xTranslation" : -332.186279296875,
+      "yRotation" : 0,
+      "yTranslation" : 78.45365142822266,
+      "zRotation" : 0,
+      "zTranslation" : -98.86455535888672
+   },
+   "mesh" : {
+      "angle" : 6.857266902923584,
+      "xRotation" : 1,
+      "xTranslation" : 185.8184204101562,
+      "yRotation" : 0,
+      "yTranslation" : 0,
+      "zRotation" : 0,
+      "zTranslation" : 0
+   }
 }
 
