@@ -31,6 +31,10 @@ class ofApp : public ofBaseApp{
     bool camMouseInput;
     ofVboMesh mesh0;
     ofVboMesh mesh1;
+    ofVboMesh merged;
+    bool showMerged;
+    
+    bool showGrid;
 
     ofxManipulator gizmo;
 };

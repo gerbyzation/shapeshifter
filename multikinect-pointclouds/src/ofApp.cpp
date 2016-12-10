@@ -25,6 +25,9 @@ void ofApp::setup(){
     mesh1.setUsage(GL_DYNAMIC_DRAW);
     mesh1.setMode(OF_PRIMITIVE_POINTS);
     
+    merged.setUsage(GL_DYNAMIC_DRAW);
+    merged.setMode(OF_PRIMITIVE_POINTS);
+    
     ecam.setAutoDistance(false);
     ecam.setDistance(200);
     camMouseInput = true;
@@ -42,6 +45,9 @@ void ofApp::setup(){
        Settings::getFloat("yRotation"),
        Settings::getFloat("zRotation"))
    ));
+   
+    showMerged = false;
+    showGrid = false;
     
     
 }
@@ -92,6 +98,22 @@ void ofApp::update(){
             }
         }
     }
+    
+    if (showMerged) {
+        merged.clear();
+        merged.addVertices(mesh0.getVertices());
+        if (mesh1.hasVertices()) {
+            cout << "merging clouds" << endl;
+//            merged.addVertices(mesh1.getVertices());
+            auto vertices = mesh1.getVertices();
+            ofMatrix4x4 transf = gizmo.getMatrix();
+            for (int i = 0 ; i < mesh1.getNumVertices(); i++) {
+                ofVec3f vertex = vertices[i] * transf;
+                merged.addVertex(vertex);
+            }
+        }
+        
+    }
 
 }
 
@@ -99,34 +121,48 @@ void ofApp::update(){
 void ofApp::draw(){
     ofClear(0);
     
+    
     if (mesh0.getVertices().size() || mesh1.getVertices().size()) {
         ofPushStyle();
         glPointSize(2);
         ecam.begin();
-        ofDrawAxis(100);
-        ofPushMatrix();
-        ofTranslate(0, 0, -100);
-        if (mesh0.getVertices().size()) {
-            mesh0.draw();
+
+        if (showGrid) {
+            ofDrawGrid(100);
+        } else {
+            ofDrawAxis(100);
         }
-        if (mesh1.getVertices().size()) {
-            ofScale(gizmo.getScale());
-            ofRotateX(gizmo.getRotation().x());
-            float angle;
-            ofVec3f axis;
-            auto quat = gizmo.getRotation();
-            quat.getRotate(angle, axis);
-//            cout << typeid(quat).name() << endl;
-//            quat.getRotate(angle, axis);
-            ofRotate(angle, axis.x, axis.y, axis.z);
-//            ofRotate(gizmo.getRotation().getEuler());
-            ofTranslate(gizmo.getTranslation());
-            mesh1.draw();
+
+        if (!showMerged) {
+            ofPushMatrix();
+            if (mesh0.getVertices().size()) {
+                mesh0.draw();
+            }
+            if (mesh1.getVertices().size()) {
+                ofScale(gizmo.getScale());
+                ofRotateX(gizmo.getRotation().x());
+                float angle;
+                ofVec3f axis;
+                auto quat = gizmo.getRotation();
+                quat.getRotate(angle, axis);
+                //            cout << typeid(quat).name() << endl;
+                //            quat.getRotate(angle, axis);
+                ofRotate(angle, axis.x, axis.y, axis.z);
+                //            ofRotate(gizmo.getRotation().getEuler());
+                ofTranslate(gizmo.getTranslation());
+                mesh1.draw();
+            }
+            ofPopMatrix();
+        } else {
+            if (merged.getVertices().size()) {
+                merged.draw();
+            }
         }
-        ofPopMatrix();
         gizmo.draw(ecam);
         ecam.end();
         ofPopStyle();
+        
+        
     }
     
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
@@ -164,6 +200,10 @@ void ofApp::keyPressed(int key){
         Settings::getFloat("yRotation") = axis.y;
         Settings::getFloat("zRotation") = axis.z;
         Settings::get().save("settings.json");
+    } else if (key == 'm') {
+        showMerged = !showMerged;
+    } else if (key == 'g' ) {
+        showGrid = !showGrid;
     }
 
 }
