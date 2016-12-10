@@ -1,12 +1,12 @@
 {
    "merged" : {
-      "angle" : 3.583885669708252,
-      "xRotation" : 1,
-      "xTranslation" : -332.186279296875,
+      "angle" : 1.780657529830933,
+      "xRotation" : -1,
+      "xTranslation" : 328.1212768554688,
       "yRotation" : 0,
-      "yTranslation" : 78.45365142822266,
+      "yTranslation" : 76.57685852050781,
       "zRotation" : 0,
-      "zTranslation" : -98.86455535888672
+      "zTranslation" : 95.94659423828125
    },
    "mesh" : {
       "angle" : 6.857266902923584,
@@ -16,6 +16,7 @@
       "yTranslation" : 0,
       "zRotation" : 0,
       "zTranslation" : 0
-   }
+   },
+   "yThreshold" : 160
 }
 

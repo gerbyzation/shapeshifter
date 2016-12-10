@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxMultiKinectV2.h"
-#include "ofxGui.h"
+#include "ofxDatGui.h"
 #include "ofxManipulator.h"
 #include "ofxJSONSettings.h"
 
@@ -39,4 +39,6 @@ class ofApp : public ofBaseApp{
     ofxManipulator mesh1Manipulator;
     ofxManipulator mergedManipulator;
     ofxManipulator::MANIPULATOR_TYPE previous;
+
+    ofParameter<float> yThreshold;
 };

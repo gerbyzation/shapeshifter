@@ -59,15 +59,22 @@ void ofApp::setup(){
         Settings::getFloat("merged/yRotation"),
         Settings::getFloat("merged/zRotation"))
     ));
+    
+    yThreshold.set(Settings::getFloat("yThreshold"));
 
     showMerged = false;
     showGrid = false;
-    
+
+//    slider = new ofxDatGuiSlider(yThreshold.set("Y Threshold", 500));
+//    slider->setWidth(ofGetWidth() * .2, .2);
+//    slider->setPosition(10, 50);
     
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+//    slider->update();
     kinect0.update();
     if (kinect0.isFrameNew()) {
         mesh0.clear();
@@ -79,11 +86,14 @@ void ofApp::update(){
                 for(int x = 0; x < w; x += step) {
                     float dist = kinect0.getDistanceAt(x, y);
                     if(dist > 50 && dist < 500) {
-                        ofVec3f pt = kinect0.getWorldCoordinateAt(x, y, dist);
                         ofMatrix4x4 corr = ofMatrix4x4().newScaleMatrix(-1.0, 1.0, -1.0);
-                        ofColor c(0, 0, 255);
-                        mesh0.addColor(c);
-                        mesh0.addVertex(pt * corr);
+                        ofVec3f pt = kinect0.getWorldCoordinateAt(x, y, dist) * corr;
+                        if (pt.y < yThreshold) {
+                            ofColor c(0, 0, 255);
+                            mesh0.addColor(c);
+                            mesh0.addVertex(pt);
+                        }
+                       
                     }
                 }
             }
@@ -102,12 +112,14 @@ void ofApp::update(){
                 for (int x = 0; x < w; x += step) {
                     float dist = kinect1.getDistanceAt(x, y);
                     if(dist > 50 && dist < 500) {
-                        ofVec3f pt = kinect1.getWorldCoordinateAt(x, y, dist);
                         ofMatrix4x4 corr = ofMatrix4x4().newScaleMatrix(-1.0, 1.0, -1.0);
+                        ofVec3f pt = kinect1.getWorldCoordinateAt(x, y, dist) * corr;
                         
-                        ofColor c(255, 0, 0);
-                        mesh1.addColor(c);
-                        mesh1.addVertex(pt * corr);
+                        if (pt.y < yThreshold) {
+                            ofColor c(255, 0, 0);
+                            mesh1.addColor(c);
+                            mesh1.addVertex(pt);
+                        }
                     }
                 }
             }
@@ -192,9 +204,12 @@ void ofApp::draw(){
         ofPopStyle();
     }
     
+    
+    
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
     ofDrawBitmapStringHighlight("Device Count : " + ofToString(ofxMultiKinectV2::getDeviceCount()), 10, 40);
     
+//    slider->draw();
 
     
 }
@@ -250,12 +265,18 @@ void ofApp::keyPressed(int key){
         Settings::getFloat("merged/yRotation") = axisMerged.y;
         Settings::getFloat("merged/zRotation") = axisMerged.z;
         
+        Settings::getFloat("yThreshold") = yThreshold;
+
         // save to file
         Settings::get().save("settings.json");
     } else if (key == 'm') {
         showMerged = !showMerged;
     } else if (key == 'g' ) {
         showGrid = !showGrid;
+    } else if (key == '+') {
+        yThreshold += 10.0;
+    } else if (key == '-') {
+        yThreshold -= 10;
     }
 
 }
