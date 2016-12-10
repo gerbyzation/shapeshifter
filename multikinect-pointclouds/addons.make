@@ -1,0 +1,4 @@
+ofxGui
+ofxManipulator
+ofxMultiKinectV2
+ofxTurboJpeg
