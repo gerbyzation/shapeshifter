@@ -2,6 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    // load settings
+    Settings::get().load("settings.json");
+
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     
@@ -24,10 +27,23 @@ void ofApp::setup(){
     
     ecam.setAutoDistance(false);
     ecam.setDistance(200);
-    
+    camMouseInput = true;
+
     gizmo = ofxManipulator();
-//    gizmo.setManipulatorScale(100);
-    gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_SCALE);
+    gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_NONE);
+    gizmo.setTranslation(ofVec3f(
+        Settings::getFloat("xTranslation"),
+        Settings::getFloat("yTranslation"),
+        Settings::getFloat("zTranslation")
+    ));
+    gizmo.setRotation(ofQuaternion(
+       Settings::getFloat("angle"), ofVec3f(
+       Settings::getFloat("xRotation"),
+       Settings::getFloat("yRotation"),
+       Settings::getFloat("zRotation"))
+   ));
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -129,14 +145,25 @@ void ofApp::keyPressed(int key){
             ecam.disableMouseInput();
             gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_TRANSLATION);
         }
-    }
-    
-    if (key == '1') {
+    } else if (key == '1') {
         ecam.disableMouseInput();
         gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_TRANSLATION);
     } else if (key == '2') {
         ecam.disableMouseInput();
         gizmo.setManipulatorType(ofxManipulator::MANIPULATOR_ROTATION);
+    } else if (key == 's') {
+        Settings::getFloat("xTranslation") = gizmo.getTranslation().x;
+        Settings::getFloat("yTranslation") = gizmo.getTranslation().y;
+        Settings::getFloat("zTranslation") = gizmo.getTranslation().z;
+        ofQuaternion rotation = gizmo.getRotation();
+        float angle;
+        ofVec3f axis;
+        rotation.getRotate(angle, axis);
+        Settings::getFloat("angle") = angle;
+        Settings::getFloat("xRotation") = axis.x;
+        Settings::getFloat("yRotation") = axis.y;
+        Settings::getFloat("zRotation") = axis.z;
+        Settings::get().save("settings.json");
     }
 
 }

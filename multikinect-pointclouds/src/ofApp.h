@@ -4,6 +4,7 @@
 #include "ofxMultiKinectV2.h"
 #include "ofxGui.h"
 #include "ofxManipulator.h"
+#include "ofxJSONSettings.h"
 
 class ofApp : public ofBaseApp{
 
@@ -27,7 +28,7 @@ class ofApp : public ofBaseApp{
     ofxMultiKinectV2 kinect0;
     ofxMultiKinectV2 kinect1;
     ofEasyCam ecam;
-    bool camMouseInput = true;
+    bool camMouseInput;
     ofVboMesh mesh0;
     ofVboMesh mesh1;
 
