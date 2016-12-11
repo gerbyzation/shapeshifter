@@ -40,4 +40,5 @@ class ofApp : public ofBaseApp{
     ofxManipulator::MANIPULATOR_TYPE previous;
 
     ofParameter<float> yThreshold;
+    ofFbo flattened;
 };

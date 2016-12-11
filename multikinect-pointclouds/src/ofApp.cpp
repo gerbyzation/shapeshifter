@@ -65,7 +65,8 @@ void ofApp::setup(){
     yThreshold.set(Settings::getFloat("yThreshold"));
 
     showMerged = false;
-    showGrid = false;    
+    showGrid = false;
+    flattened.allocate(1000, 500, GL_RGBA);
 }
 
 //--------------------------------------------------------------
@@ -125,18 +126,49 @@ void ofApp::update(){
     
     if (showMerged) {
         merged.clear();
-        merged.addVertices(mesh0.getVertices());
+        
+        flattened.begin();
+        ofEnableAlphaBlending();
+        ofClear(0, 0, 0, 0);
+        
+        ofMatrix4x4 mergedTransformation = mergedManipulator.getMatrix();
+        auto vertices0 = mesh0.getVertices();
+        for (int i = 0; i < mesh0.getNumVertices(); i++) {
+            // generate flattened image
+            ofVec3f point = vertices0[i] * mergedTransformation;
+            ofSetColor(255, 0, 0, ofClamp(point.y * 2, 0, 255));
+            ofFill();
+            ofDrawCircle(point.x, -point.z, 2);
+            
+            // add to merged pointcloud
+            merged.addVertex(point);
+        };
         if (mesh1.hasVertices()) {
             auto vertices = mesh1.getVertices();
             ofMatrix4x4 transf = mesh1Manipulator.getMatrix();
             for (int i = 0 ; i < mesh1.getNumVertices(); i++) {
                 ofVec3f vertex = vertices[i] * transf;
                 merged.addVertex(vertex);
+                
+                ofVec3f point = vertex * mergedTransformation;
+                ofSetColor(255, 0, 0, ofClamp(vertex.y * 2, 0, 255));
+                ofFill();
+                ofDrawCircle(vertex.x, -vertex.z, 2);
             }
         }
-        
+//        vector<ofVec3f>vertices = merged.getVertices();
+//        
+//        float alphaMin = 0;
+//        float alphaMax = 0;
+//        for (int i = 0; i < vertices.size(); i++) {
+//            ofVec3f point = vertices[i] * transformation;
+//            ofSetColor(255, 0, 0, ofClamp(point.y * 2, 0, 255));
+//            ofFill();
+//            ofDrawCircle(point.x, -point.z, 2);
+//        }
+        ofDisableAlphaBlending();
+        flattened.end();
     }
-
 }
 
 //--------------------------------------------------------------
@@ -156,7 +188,6 @@ void ofApp::draw(){
         }
 
         if (!showMerged) {
-            
             if (mesh0.getVertices().size()) {
                 mesh0.draw();
             }
@@ -173,7 +204,6 @@ void ofApp::draw(){
                 ofPopMatrix();
                 mesh1Manipulator.draw(ecam);
             }
-            
         } else {
             if (merged.getVertices().size()) {
                 ofPushMatrix();
@@ -186,20 +216,20 @@ void ofApp::draw(){
                 ofTranslate(mergedManipulator.getTranslation());
                 merged.draw();
                 ofPopMatrix();
+                
+                
                 mergedManipulator.draw(ecam);
             }
         }
-        ofSpherePrimitive sphere = ofSpherePrimitive();
-        sphere.setRadius(50);
-        sphere.setPosition(100, 100, 100);
-        sphere.draw();
         
         ecam.end();
         ofPopStyle();
+        
     }
-    
-    
-    
+    if (showMerged) {
+        flattened.draw(0, 0, 1000, 500);
+    }
+
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
     ofDrawBitmapStringHighlight("Device Count : " + ofToString(ofxMultiKinectV2::getDeviceCount()), 10, 40);
 }
