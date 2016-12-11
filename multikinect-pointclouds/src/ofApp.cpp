@@ -1,5 +1,8 @@
 #include "ofApp.h"
+#include <cmath>
 
+using namespace ofxCv;
+using namespace cv;
 //--------------------------------------------------------------
 void ofApp::setup(){
     // load settings
@@ -64,15 +67,31 @@ void ofApp::setup(){
     
     yThreshold.set(Settings::getFloat("yThreshold"));
 
-    showMerged = false;
+    showMerged = true;
     showGrid = false;
     flattened.allocate(1000, 500, GL_RGBA);
+    
+    gui.setup();
+    gui.add(xMin.set("X min", Settings::getFloat("xMin"), -300, 300));
+    gui.add(xMax.set("X max", Settings::getFloat("xMax"), 500, 1200));
+    gui.add(yMin.set("Y min", Settings::getFloat("yMin"), -300, 300));
+    gui.add(yMax.set("Y max", Settings::getFloat("yMax"), 200, 700));
+    gui.add(zMin.set("Z min", Settings::getFloat("zMin"), -300, 300));
+    gui.add(zMax.set("Z max", Settings::getFloat("zMax"), 0, 200));
+}
+
+bool ofApp::inBoundaries(ofVec3f point) {
+    if (point.x < xMin) return false;
+    if (point.x > xMax) return false;
+    if (point.y < yMin) return false;
+    if (point.y > yMax) return false;
+    if (-point.z < zMin) return false;
+    if (-point.z > xMax) return false;
+    return true;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
-//    slider->update();
     kinect0.update();
     if (kinect0.isFrameNew()) {
         mesh0.clear();
@@ -133,15 +152,23 @@ void ofApp::update(){
         
         ofMatrix4x4 mergedTransformation = mergedManipulator.getMatrix();
         auto vertices0 = mesh0.getVertices();
+        ofEnableBlendMode(OF_BLENDMODE_ADD);
         for (int i = 0; i < mesh0.getNumVertices(); i++) {
-            // generate flattened image
-            ofVec3f point = vertices0[i] * mergedTransformation;
-            ofSetColor(255, 0, 0, ofClamp(point.y * 2, 0, 255));
-            ofFill();
-            ofDrawCircle(point.x, -point.z, 2);
-            
+            ofVec3f point = vertices0[i];
             // add to merged pointcloud
             merged.addVertex(point);
+            
+            float minY = 50;
+            // generate flattened image
+            point = point * mergedTransformation;
+            if (inBoundaries(point)) {
+                float alpha = ofClamp(point.y, 0, 255);
+                ofSetColor(255, 255, 255, 20);
+                ofFill();
+                ofDrawCircle(point.x, -point.z, 2);
+            }
+            
+            
         };
         if (mesh1.hasVertices()) {
             auto vertices = mesh1.getVertices();
@@ -151,30 +178,28 @@ void ofApp::update(){
                 merged.addVertex(vertex);
                 
                 ofVec3f point = vertex * mergedTransformation;
-                ofSetColor(255, 0, 0, ofClamp(vertex.y * 2, 0, 255));
-                ofFill();
-                ofDrawCircle(vertex.x, -vertex.z, 2);
+                if (inBoundaries(point)) {
+                    float alpha = ofClamp(point.y, 0, 255);
+                    ofSetColor(255, 255, 255, 20);
+                    ofFill();
+                    ofDrawCircle(point.x, -point.z, 2);
+                }
             }
         }
-//        vector<ofVec3f>vertices = merged.getVertices();
-//        
-//        float alphaMin = 0;
-//        float alphaMax = 0;
-//        for (int i = 0; i < vertices.size(); i++) {
-//            ofVec3f point = vertices[i] * transformation;
-//            ofSetColor(255, 0, 0, ofClamp(point.y * 2, 0, 255));
-//            ofFill();
-//            ofDrawCircle(point.x, -point.z, 2);
-//        }
+        ofDisableBlendMode();
+
         ofDisableAlphaBlending();
         flattened.end();
+        ofPixels pixels;
+        flattened.readToPixels(pixels);
+        contourFinder.findContours(toCv(pixels));
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofEnableDepthTest();
     ofClear(0);
-    
     
     if (mesh0.getVertices().size() || mesh1.getVertices().size()) {
         ofPushStyle();
@@ -221,17 +246,22 @@ void ofApp::draw(){
                 mergedManipulator.draw(ecam);
             }
         }
-        
         ecam.end();
         ofPopStyle();
-        
-    }
-    if (showMerged) {
-        flattened.draw(0, 0, 1000, 500);
-    }
 
+        if (showMerged) {
+//            RectTracker& tracker = contourFinder.getTracker();
+//            tracker.
+            contourFinder.draw();
+        }
+    }
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
     ofDrawBitmapStringHighlight("Device Count : " + ofToString(ofxMultiKinectV2::getDeviceCount()), 10, 40);
+
+    ofDisableDepthTest();
+    gui.draw();
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -286,6 +316,13 @@ void ofApp::keyPressed(int key){
         Settings::getFloat("merged/zRotation") = axisMerged.z;
         
         Settings::getFloat("yThreshold") = yThreshold;
+        
+        Settings::getFloat("xMin") = xMin;
+        Settings::getFloat("xMax") = xMax;
+        Settings::getFloat("yMin") = yMin;
+        Settings::getFloat("yMax") = yMax;
+        Settings::getFloat("zMin") = zMin;
+        Settings::getFloat("zMax") = zMax;
 
         // save to file
         Settings::get().save("settings.json");
@@ -298,7 +335,6 @@ void ofApp::keyPressed(int key){
     } else if (key == '-') {
         yThreshold -= 10;
     }
-
 }
 
 //--------------------------------------------------------------

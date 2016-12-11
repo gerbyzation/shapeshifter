@@ -1,6 +1,6 @@
 {
    "merged" : {
-      "angle" : 1.780657649040222,
+      "angle" : 1.780657768249512,
       "xRotation" : -1,
       "xTranslation" : 328.1212768554688,
       "yRotation" : 0,
@@ -17,6 +17,12 @@
       "zRotation" : 0,
       "zTranslation" : 0
    },
-   "yThreshold" : 160
+   "xMax" : 1193,
+   "xMin" : 0,
+   "yMax" : 255,
+   "yMin" : 6,
+   "yThreshold" : 340,
+   "zMax" : 10,
+   "zMin" : 12
 }
 
