@@ -4,4 +4,5 @@ ofxJSON
 ofxJsonSettings
 ofxManipulator
 ofxMultiKinectV2
+ofxOpenCv
 ofxTurboJpeg

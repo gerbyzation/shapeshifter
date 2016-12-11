@@ -6,25 +6,23 @@
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "D50CF6B644971F323A2E6CD4570C3FE6CBE3434A" : 9223372036854775807,
     "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49" : 9223372036854775807,
-    "D8811CE32924E36E8903BAF4011407E4BAF64556" : 9223372036854775807,
     "E5D2BF07F1BD4888430F12ADB292E9A68C0BFC76" : 9223372036854775807,
     "5DB7C332A3A89035E93556A2A38BF414005BA671" : 9223372036854775807,
     "88B9FC151DC341353CD8953242CE29BE15BF959C" : 9223372036854775807,
     "B0547E2CCC084E945C82C2C3A1577223A042C0B0" : 9223372036854775807,
     "37526DA425E5430474A14FBFA1BC4525160B5FC1" : 9223372036854775807,
-    "9233F0F4A2BE011BD468E5177A5AD6623263B23D" : 9223372036854775807
+    "D8811CE32924E36E8903BAF4011407E4BAF64556" : 9223372036854775807
   },
-  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "A86C2CA9-057C-4CFC-A9BE-C8D4C6DA0751",
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "9E00EB80-C765-440E-8CB0-76A2C6A40F4D",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "D50CF6B644971F323A2E6CD4570C3FE6CBE3434A" : "..\/addons\/ofxManipulator",
     "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49" : "premediation\/",
-    "D8811CE32924E36E8903BAF4011407E4BAF64556" : "..\/addons\/ofxOpenNI",
     "E5D2BF07F1BD4888430F12ADB292E9A68C0BFC76" : "..\/addons\/ofxTurboJpeg",
     "5DB7C332A3A89035E93556A2A38BF414005BA671" : "..\/addons\/ofxJSON",
     "88B9FC151DC341353CD8953242CE29BE15BF959C" : "..\/addons\/ofxMultiKinectV2",
     "B0547E2CCC084E945C82C2C3A1577223A042C0B0" : "..\/addons\/ofxJsonSettings",
     "37526DA425E5430474A14FBFA1BC4525160B5FC1" : "..\/addons\/ofxCv",
-    "9233F0F4A2BE011BD468E5177A5AD6623263B23D" : "..\/addons\/ofxDatGui"
+    "D8811CE32924E36E8903BAF4011407E4BAF64556" : "..\/addons\/ofxOpenNI"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "multikinect-pointclouds",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -49,11 +47,6 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/hanasaan\/ofxMultiKinectV2",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "88B9FC151DC341353CD8953242CE29BE15BF959C"
-    },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/braitsch\/ofxDatGui",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9233F0F4A2BE011BD468E5177A5AD6623263B23D"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mattfelsen\/ofxJsonSettings",
