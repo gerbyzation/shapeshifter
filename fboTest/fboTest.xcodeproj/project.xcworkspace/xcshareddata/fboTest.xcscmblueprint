@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49" : 9223372036854775807,
+    "D8811CE32924E36E8903BAF4011407E4BAF64556" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "68F2C681-61E8-4E49-8287-A3527374CD79",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49" : "premediation\/",
+    "D8811CE32924E36E8903BAF4011407E4BAF64556" : "..\/addons\/ofxOpenNI"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "fboTest",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "fboTest\/fboTest.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/gerbyzation\/shapeshifter.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ccerhan\/ofxOpenNI",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D8811CE32924E36E8903BAF4011407E4BAF64556"
+    }
+  ]
+}
