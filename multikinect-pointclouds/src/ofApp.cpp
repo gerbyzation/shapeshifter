@@ -77,12 +77,15 @@ void ofApp::setup(){
     gui.add(minArea.set("minArea", Settings::getInt("minArea"), 0, 1000));
     gui.add(maxArea.set("maxArea", Settings::getInt("maxArea"), 0, 1000 * 500));
     gui.add(nConsidered.set("nConsidered", Settings::getInt("nConsidered"), 0, 500));
+    
+    route.allocate(1000, 500);
 //    gui.add(xMin.set("X min", Settings::getFloat("xMin"), -300, 300));
 //    gui.add(xMax.set("X max", Settings::getFloat("xMax"), 500, 1200));
 //    gui.add(yMin.set("Y min", Settings::getFloat("yMin"), -300, 300));
 //    gui.add(yMax.set("Y max", Settings::getFloat("yMax"), 200, 700));
 //    gui.add(zMin.set("Z min", Settings::getFloat("zMin"), -300, 300));
 //    gui.add(zMax.set("Z max", Settings::getFloat("zMax"), 0, 200));
+    drawRoute(50);
 }
 
 //bool ofApp::inBoundaries(ofVec3f point) {
@@ -94,6 +97,18 @@ void ofApp::setup(){
 //    if (-point.z > xMax) return false;
 //    return true;
 //}
+
+
+void ofApp::drawRoute(int height) {
+    route.begin();
+    ofSetColor(ofColor::black);
+    ofFill();
+    ofDrawRectangle(0, 0, route.getWidth(), route.getHeight());
+    ofSetColor(ofColor::white);
+    ofFill();
+    ofDrawRectangle(0, (route.getHeight()/2) - (height / 2), route.getWidth(), height);
+    route.end();
+}
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -283,7 +298,13 @@ void ofApp::draw(){
         ofSetColor(ofColor::red);
         ofFill();
         ofDrawCircle(mainBlob.centroid.x, mainBlob.centroid.y, 5);
+        ofVec3f posLeftSensor = ofVec3f(-10+mainBlob.centroid.x, 10 + mainBlob.centroid.y, 0);
+        ofVec3f posRightSensor = ofVec3f(10 + mainBlob.centroid.x, 10 + mainBlob.centroid.y, 0);
+        ofSetColor(ofColor::blue);
+        ofDrawCircle(posLeftSensor, 3);
+        ofDrawCircle(posRightSensor, 3);
         ofPopStyle();
+        route.draw(0, 0, 1000, 500);
     }
 
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);

@@ -65,6 +65,9 @@ class ofApp : public ofBaseApp{
     ofParameter<float> zMin;
     ofParameter<float> zMax;
     ofxCvBlob mainBlob;
+    
+    ofFbo route;
+    void drawRoute(int height);
 //
 //    bool inBoundaries(ofVec3f);
 };
