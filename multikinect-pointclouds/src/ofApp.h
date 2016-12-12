@@ -69,5 +69,5 @@ class ofApp : public ofBaseApp{
     ofFbo route;
     void drawRoute(int height);
 //
-//    bool inBoundaries(ofVec3f);
+    bool inBoundaries(ofVec3f);
 };

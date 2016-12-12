@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "E011DB420D00B7A3B5664E1741F80C67F34EDBCE" : 9223372036854775807,
+    "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49" : 9223372036854775807,
+    "D8811CE32924E36E8903BAF4011407E4BAF64556" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "7889D64E-3A01-4904-AAC9-1E4E474D32EB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "E011DB420D00B7A3B5664E1741F80C67F34EDBCE" : "..\/addons\/ofxMQTT",
+    "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49" : "premediation\/",
+    "D8811CE32924E36E8903BAF4011407E4BAF64556" : "..\/addons\/ofxOpenNI"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "mqttTest",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "mqttTest\/mqttTest.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/gerbyzation\/shapeshifter.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7FF954607A1E2DE69FE4986A7B9E2E91EE843B49"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ccerhan\/ofxOpenNI",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D8811CE32924E36E8903BAF4011407E4BAF64556"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/256dpi\/ofxMQTT",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E011DB420D00B7A3B5664E1741F80C67F34EDBCE"
+    }
+  ]
+}

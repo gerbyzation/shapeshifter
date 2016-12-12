@@ -79,24 +79,24 @@ void ofApp::setup(){
     gui.add(nConsidered.set("nConsidered", Settings::getInt("nConsidered"), 0, 500));
     
     route.allocate(1000, 500);
-//    gui.add(xMin.set("X min", Settings::getFloat("xMin"), -300, 300));
-//    gui.add(xMax.set("X max", Settings::getFloat("xMax"), 500, 1200));
-//    gui.add(yMin.set("Y min", Settings::getFloat("yMin"), -300, 300));
-//    gui.add(yMax.set("Y max", Settings::getFloat("yMax"), 200, 700));
-//    gui.add(zMin.set("Z min", Settings::getFloat("zMin"), -300, 300));
-//    gui.add(zMax.set("Z max", Settings::getFloat("zMax"), 0, 200));
+    gui.add(xMin.set("X min", Settings::getFloat("xMin"), -300, 300));
+    gui.add(xMax.set("X max", Settings::getFloat("xMax"), 500, 1200));
+    gui.add(yMin.set("Y min", Settings::getFloat("yMin"), -300, 300));
+    gui.add(yMax.set("Y max", Settings::getFloat("yMax"), 200, 700));
+    gui.add(zMin.set("Z min", Settings::getFloat("zMin"), -300, 300));
+    gui.add(zMax.set("Z max", Settings::getFloat("zMax"), 0, 200));
     drawRoute(50);
 }
 
-//bool ofApp::inBoundaries(ofVec3f point) {
-//    if (point.x < xMin) return false;
-//    if (point.x > xMax) return false;
-//    if (point.y < yMin) return false;
-//    if (point.y > yMax) return false;
-//    if (-point.z < zMin) return false;
-//    if (-point.z > xMax) return false;
-//    return true;
-//}
+bool ofApp::inBoundaries(ofVec3f point) {
+    if (point.x < xMin) return false;
+    if (point.x > xMax) return false;
+    if (point.y < yMin) return false;
+    if (point.y > yMax) return false;
+    if (-point.z < zMin) return false;
+    if (-point.z > xMax) return false;
+    return true;
+}
 
 
 void ofApp::drawRoute(int height) {

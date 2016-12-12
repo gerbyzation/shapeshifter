@@ -1,7 +1,7 @@
 {
    "maxArea" : 50000,
    "merged" : {
-      "angle" : 1.780658006668091,
+      "angle" : 1.780658841133118,
       "xRotation" : -1,
       "xTranslation" : 429.4501342773438,
       "yRotation" : 0,
@@ -10,17 +10,23 @@
       "zTranslation" : 151.75439453125
    },
    "mesh" : {
-      "angle" : 5.070518493652344,
-      "xRotation" : -1,
-      "xTranslation" : -202.9706878662109,
-      "yRotation" : 0,
-      "yTranslation" : -0.5248813629150391,
-      "zRotation" : 0,
-      "zTranslation" : -1.504235029220581
+      "angle" : 7.443492412567139,
+      "xRotation" : -0.2671284377574921,
+      "xTranslation" : 127.4702529907227,
+      "yRotation" : 0.9632782340049744,
+      "yTranslation" : 10.14633464813232,
+      "zRotation" : -0.02715691365301609,
+      "zTranslation" : 15.96752452850342
    },
    "minArea" : 45,
    "nConsidered" : 13,
    "threshold" : 88,
-   "yThreshold" : 160
+   "xMax" : 0,
+   "xMin" : 0,
+   "yMax" : 0,
+   "yMin" : 0,
+   "yThreshold" : 160,
+   "zMax" : 0,
+   "zMin" : 0
 }
 
