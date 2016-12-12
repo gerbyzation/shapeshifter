@@ -18,9 +18,9 @@
       "zRotation" : 0,
       "zTranslation" : -1.504235029220581
    },
-   "minArea" : 0,
+   "minArea" : 45,
    "nConsidered" : 13,
-   "threshold" : 106,
+   "threshold" : 88,
    "yThreshold" : 160
 }
 

@@ -64,6 +64,7 @@ class ofApp : public ofBaseApp{
     ofParameter<float> xMax;
     ofParameter<float> zMin;
     ofParameter<float> zMax;
+    ofxCvBlob mainBlob;
 //
 //    bool inBoundaries(ofVec3f);
 };

@@ -208,15 +208,16 @@ void ofApp::update(){
         flatGray.setFromPixels(grayscalePixels);
         flatGray.threshold(threshold);
         contourFinder.findContours(flatGray, minArea, maxArea, nConsidered, false);
-//        ofImage flat;
-//        flat.allocate(pixels.getWidth(), pixels.getHeight(), OF_IMAGE_COLOR_ALPHA);
-//        flat.setFromPixels(pixels);
-//        Mat mat = toCv(grayscalePixels);
-//        contourFinder2.findContours(mat);
-//        toCv(pixels);
-//        cv::Mat hey = cv::Mat
-//        contourFinder.findContours(<#InputOutputArray image#>, <#OutputArrayOfArrays contours#>, <#OutputArray hierarchy#>, <#int mode#>, <#int method#>)
-//        contourFinder.findContours(pixels);
+        if (contourFinder.nBlobs > 1) {
+            for (int i = 0; i < contourFinder.nBlobs; i++) {
+                ofxCvBlob blob = contourFinder.blobs[i];
+                if (!mainBlob.area || mainBlob.area < blob.area) {
+                    mainBlob = blob;
+                }
+            }
+        } else if (contourFinder.nBlobs == 1) {
+            mainBlob = contourFinder.blobs[0];
+        }
     }
 }
 
@@ -267,7 +268,6 @@ void ofApp::draw(){
                 merged.draw();
                 ofPopMatrix();
                 
-                
                 mergedManipulator.draw(ecam);
             }
         }
@@ -277,12 +277,13 @@ void ofApp::draw(){
         
     }
     if (showMerged) {
-      
 //        flatGray.draw(0, 0, 1000, 500);
-//        for (int i = 0; i < contourFinder.nBlobs; i++) {
-//            contourFinder.blobs[i].draw(0, 0);
-//        }
         contourFinder.draw(0, 0, 1000, 500);
+        ofPushStyle();
+        ofSetColor(ofColor::red);
+        ofFill();
+        ofDrawCircle(mainBlob.centroid.x, mainBlob.centroid.y, 5);
+        ofPopStyle();
     }
 
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
