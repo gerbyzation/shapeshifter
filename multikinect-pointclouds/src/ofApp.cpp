@@ -82,9 +82,9 @@ void ofApp::setup(){
     gui.add(xMin.set("X min", Settings::getFloat("xMin"), -300, 300));
     gui.add(xMax.set("X max", Settings::getFloat("xMax"), 500, 1200));
     gui.add(yMin.set("Y min", Settings::getFloat("yMin"), -300, 300));
-    gui.add(yMax.set("Y max", Settings::getFloat("yMax"), 200, 700));
-    gui.add(zMin.set("Z min", Settings::getFloat("zMin"), -300, 300));
-    gui.add(zMax.set("Z max", Settings::getFloat("zMax"), 0, 200));
+    gui.add(yMax.set("Y max", Settings::getFloat("yMax"), 0, 700));
+    gui.add(zMin.set("Z min", Settings::getFloat("zMin"), -500, 300));
+    gui.add(zMax.set("Z max", Settings::getFloat("zMax"), -300, 200));
     drawRoute(50);
 }
 
@@ -93,8 +93,8 @@ bool ofApp::inBoundaries(ofVec3f point) {
     if (point.x > xMax) return false;
     if (point.y < yMin) return false;
     if (point.y > yMax) return false;
-    if (-point.z < zMin) return false;
-    if (-point.z > xMax) return false;
+    if (point.z < zMin) return false;
+    if (point.z > xMax) return false;
     return true;
 }
 
@@ -181,11 +181,11 @@ void ofApp::update(){
             float minY = 50;
             // generate flattened image
             point = point * mergedTransformation;
-//            if (inBoundaries(point)) {m
+            if (inBoundaries(point)) {
                 ofSetColor(255, 255, 255, 5);
                 ofFill();
                 ofDrawCircle(point.x, -point.z, 2);
-//            }
+            }
         };
         if (mesh1.hasVertices()) {
             auto vertices = mesh1.getVertices();
@@ -195,11 +195,11 @@ void ofApp::update(){
                 merged.addVertex(vertex);
                 
                 ofVec3f point = vertex * mergedTransformation;
-//                if(inBoundaries(point)) {
+                if(inBoundaries(point)) {
                     ofSetColor(255, 255, 255, 5);
                     ofFill();
                     ofDrawCircle(point.x, -point.z, 2);
-//                }
+                }
             }
         }
         
@@ -308,7 +308,7 @@ void ofApp::draw(){
         ofDrawCircle(posLeftSensor, 3);
         ofDrawCircle(posRightSensor, 3);
         ofPopStyle();
-        route.draw(0, 0, 1000, 500);
+//        route.draw(0, 0, 1000, 500);
         cout << "left alert " << (alertLeft ? "true" : "false") << " right alert: " << (alertRight ? "true" : "false") << endl;
     }
 
@@ -381,12 +381,12 @@ void ofApp::keyPressed(int key){
         Settings::getInt("maxArea") = maxArea;
         Settings::getInt("nConsidered") = nConsidered;
         
-//        Settings::getFloat("xMin") = xMin;
-//        Settings::getFloat("xMax") = xMax;
-//        Settings::getFloat("yMin") = yMin;
-//        Settings::getFloat("yMax") = yMax;
-//        Settings::getFloat("zMin") = zMin;
-//        Settings::getFloat("zMax") = zMax;
+        Settings::getFloat("xMin") = xMin;
+        Settings::getFloat("xMax") = xMax;
+        Settings::getFloat("yMin") = yMin;
+        Settings::getFloat("yMax") = yMax;
+        Settings::getFloat("zMin") = zMin;
+        Settings::getFloat("zMax") = zMax;
 
         // save to file
         Settings::get().save("settings.json");

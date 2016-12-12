@@ -1,7 +1,7 @@
 {
    "maxArea" : 50000,
    "merged" : {
-      "angle" : 1.780658841133118,
+      "angle" : 1.780659317970276,
       "xRotation" : -1,
       "xTranslation" : 429.4501342773438,
       "yRotation" : 0,
@@ -21,12 +21,12 @@
    "minArea" : 45,
    "nConsidered" : 13,
    "threshold" : 88,
-   "xMax" : 0,
-   "xMin" : 0,
-   "yMax" : 0,
+   "xMax" : 685.5,
+   "xMin" : -3,
+   "yMax" : 556.5,
    "yMin" : 0,
    "yThreshold" : 160,
-   "zMax" : 0,
-   "zMin" : 0
+   "zMax" : -40,
+   "zMin" : -304
 }
 
