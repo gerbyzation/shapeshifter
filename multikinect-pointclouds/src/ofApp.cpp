@@ -301,10 +301,15 @@ void ofApp::draw(){
         ofVec3f posLeftSensor = ofVec3f(-10+mainBlob.centroid.x, 10 + mainBlob.centroid.y, 0);
         ofVec3f posRightSensor = ofVec3f(10 + mainBlob.centroid.x, 10 + mainBlob.centroid.y, 0);
         ofSetColor(ofColor::blue);
+        ofPixels routePixels;
+        route.readToPixels(routePixels);
+        bool alertLeft = routePixels.getColor(posLeftSensor.x, posLeftSensor.y).getBrightness() == 0;
+        bool alertRight = routePixels.getColor(posRightSensor.x, posRightSensor.y).getBrightness() == 0;
         ofDrawCircle(posLeftSensor, 3);
         ofDrawCircle(posRightSensor, 3);
         ofPopStyle();
         route.draw(0, 0, 1000, 500);
+        cout << "left alert " << (alertLeft ? "true" : "false") << " right alert: " << (alertRight ? "true" : "false") << endl;
     }
 
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
