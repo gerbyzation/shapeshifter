@@ -71,7 +71,12 @@ void ofApp::setup(){
     showGrid = false;
     flattened.allocate(1000, 500);
     
-//    gui.setup();
+    gui.setup();
+    gui.add(threshold.set("threshold", Settings::getInt("threshold"), 0, 150));
+    
+    gui.add(minArea.set("minArea", Settings::getInt("minArea"), 0, 1000));
+    gui.add(maxArea.set("maxArea", Settings::getInt("maxArea"), 0, 1000 * 500));
+    gui.add(nConsidered.set("nConsidered", Settings::getInt("nConsidered"), 0, 500));
 //    gui.add(xMin.set("X min", Settings::getFloat("xMin"), -300, 300));
 //    gui.add(xMax.set("X max", Settings::getFloat("xMax"), 500, 1200));
 //    gui.add(yMin.set("Y min", Settings::getFloat("yMin"), -300, 300));
@@ -161,8 +166,8 @@ void ofApp::update(){
             float minY = 50;
             // generate flattened image
             point = point * mergedTransformation;
-//            if (inBoundaries(point)) {
-                ofSetColor(255, 255, 255, 10);
+//            if (inBoundaries(point)) {m
+                ofSetColor(255, 255, 255, 5);
                 ofFill();
                 ofDrawCircle(point.x, -point.z, 2);
 //            }
@@ -176,7 +181,7 @@ void ofApp::update(){
                 
                 ofVec3f point = vertex * mergedTransformation;
 //                if(inBoundaries(point)) {
-                    ofSetColor(255, 255, 255, 10);
+                    ofSetColor(255, 255, 255, 5);
                     ofFill();
                     ofDrawCircle(point.x, -point.z, 2);
 //                }
@@ -201,12 +206,13 @@ void ofApp::update(){
 
         flatGray.clear();
         flatGray.setFromPixels(grayscalePixels);
-        contourFinder.findContours(flatGray, 20, 100, 10, false);
+        flatGray.threshold(threshold);
+        contourFinder.findContours(flatGray, minArea, maxArea, nConsidered, false);
 //        ofImage flat;
 //        flat.allocate(pixels.getWidth(), pixels.getHeight(), OF_IMAGE_COLOR_ALPHA);
 //        flat.setFromPixels(pixels);
-//        Mat mat = toCv(flat);
-//        contourFinder.findContours(flat);
+//        Mat mat = toCv(grayscalePixels);
+//        contourFinder2.findContours(mat);
 //        toCv(pixels);
 //        cv::Mat hey = cv::Mat
 //        contourFinder.findContours(<#InputOutputArray image#>, <#OutputArrayOfArrays contours#>, <#OutputArray hierarchy#>, <#int mode#>, <#int method#>)
@@ -271,16 +277,23 @@ void ofApp::draw(){
         
     }
     if (showMerged) {
-//        flattened.draw(0, 0, 1000, 500);
-        contourFinder.draw();
+      
 //        flatGray.draw(0, 0, 1000, 500);
+//        for (int i = 0; i < contourFinder.nBlobs; i++) {
+//            contourFinder.blobs[i].draw(0, 0);
+//        }
+        contourFinder.draw(0, 0, 1000, 500);
     }
 
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
     ofDrawBitmapStringHighlight("Device Count : " + ofToString(ofxMultiKinectV2::getDeviceCount()), 10, 40);
     
+    stringstream reportStr;
+    reportStr << "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
+    ofDrawBitmapString(reportStr.str(), 20, 600);
+    
     ofDisableDepthTest();
-//    gui.draw();
+    gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -335,6 +348,11 @@ void ofApp::keyPressed(int key){
         Settings::getFloat("merged/zRotation") = axisMerged.z;
         
         Settings::getFloat("yThreshold") = yThreshold;
+        
+        Settings::getInt("threshold") = threshold;
+        Settings::getInt("minArea") = minArea;
+        Settings::getInt("maxArea") = maxArea;
+        Settings::getInt("nConsidered") = nConsidered;
         
 //        Settings::getFloat("xMin") = xMin;
 //        Settings::getFloat("xMax") = xMax;

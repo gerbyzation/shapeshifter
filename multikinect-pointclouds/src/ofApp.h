@@ -47,17 +47,23 @@ class ofApp : public ofBaseApp{
     
     ofxCvGrayscaleImage flatGray;
     
-//    ofxCv::ContourFinder contourFinder;
+    ofxCv::ContourFinder contourFinder2;
     ofxCvContourFinder contourFinder;
     
-//    ofxPanel gui;
-//    
-//    ofParameter<float> yMin;
-//    ofParameter<float> yMax;
-//    ofParameter<float> xMin;
-//    ofParameter<float> xMax;
-//    ofParameter<float> zMin;
-//    ofParameter<float> zMax;
-//    
+    ofxPanel gui;
+    
+    ofParameter<int> threshold;
+    
+    ofParameter<int> minArea;
+    ofParameter<int> maxArea;
+    ofParameter<int> nConsidered;
+    
+    ofParameter<float> yMin;
+    ofParameter<float> yMax;
+    ofParameter<float> xMin;
+    ofParameter<float> xMax;
+    ofParameter<float> zMin;
+    ofParameter<float> zMax;
+//
 //    bool inBoundaries(ofVec3f);
 };
