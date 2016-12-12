@@ -4,7 +4,8 @@
 #include "ofxMultiKinectV2.h"
 #include "ofxManipulator.h"
 #include "ofxJSONSettings.h"
-//#include "ofxCv.h"
+#include "ofxCv.h"
+#include "ofxOpenCv.h"
 #include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
@@ -44,16 +45,19 @@ class ofApp : public ofBaseApp{
     ofParameter<float> yThreshold;
     ofFbo flattened;
     
+    ofxCvGrayscaleImage flatGray;
+    
 //    ofxCv::ContourFinder contourFinder;
+    ofxCvContourFinder contourFinder;
     
-    ofxPanel gui;
-    
-    ofParameter<float> yMin;
-    ofParameter<float> yMax;
-    ofParameter<float> xMin;
-    ofParameter<float> xMax;
-    ofParameter<float> zMin;
-    ofParameter<float> zMax;
-    
-    bool inBoundaries(ofVec3f);
+//    ofxPanel gui;
+//    
+//    ofParameter<float> yMin;
+//    ofParameter<float> yMax;
+//    ofParameter<float> xMin;
+//    ofParameter<float> xMax;
+//    ofParameter<float> zMin;
+//    ofParameter<float> zMax;
+//    
+//    bool inBoundaries(ofVec3f);
 };

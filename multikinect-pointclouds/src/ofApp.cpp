@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
-//using namespace ofxCv;
-//using namespace cv;
+using namespace ofxCv;
+using namespace cv;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -67,28 +67,28 @@ void ofApp::setup(){
     
     yThreshold.set(Settings::getFloat("yThreshold"));
 
-    showMerged = true;
+    showMerged = false;
     showGrid = false;
-    flattened.allocate(1000, 500, GL_RGBA);
+    flattened.allocate(1000, 500);
     
-    gui.setup();
-    gui.add(xMin.set("X min", Settings::getFloat("xMin"), -300, 300));
-    gui.add(xMax.set("X max", Settings::getFloat("xMax"), 500, 1200));
-    gui.add(yMin.set("Y min", Settings::getFloat("yMin"), -300, 300));
-    gui.add(yMax.set("Y max", Settings::getFloat("yMax"), 200, 700));
-    gui.add(zMin.set("Z min", Settings::getFloat("zMin"), -300, 300));
-    gui.add(zMax.set("Z max", Settings::getFloat("zMax"), 0, 200));
+//    gui.setup();
+//    gui.add(xMin.set("X min", Settings::getFloat("xMin"), -300, 300));
+//    gui.add(xMax.set("X max", Settings::getFloat("xMax"), 500, 1200));
+//    gui.add(yMin.set("Y min", Settings::getFloat("yMin"), -300, 300));
+//    gui.add(yMax.set("Y max", Settings::getFloat("yMax"), 200, 700));
+//    gui.add(zMin.set("Z min", Settings::getFloat("zMin"), -300, 300));
+//    gui.add(zMax.set("Z max", Settings::getFloat("zMax"), 0, 200));
 }
 
-bool ofApp::inBoundaries(ofVec3f point) {
-    if (point.x < xMin) return false;
-    if (point.x > xMax) return false;
-    if (point.y < yMin) return false;
-    if (point.y > yMax) return false;
-    if (-point.z < zMin) return false;
-    if (-point.z > xMax) return false;
-    return true;
-}
+//bool ofApp::inBoundaries(ofVec3f point) {
+//    if (point.x < xMin) return false;
+//    if (point.x > xMax) return false;
+//    if (point.y < yMin) return false;
+//    if (point.y > yMax) return false;
+//    if (-point.z < zMin) return false;
+//    if (-point.z > xMax) return false;
+//    return true;
+//}
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -148,7 +148,7 @@ void ofApp::update(){
         
         flattened.begin();
         ofEnableAlphaBlending();
-        ofClear(0, 0, 0, 0);
+        ofClear(0, 0, 0);
         
         ofMatrix4x4 mergedTransformation = mergedManipulator.getMatrix();
         auto vertices0 = mesh0.getVertices();
@@ -161,12 +161,11 @@ void ofApp::update(){
             float minY = 50;
             // generate flattened image
             point = point * mergedTransformation;
-            if (inBoundaries(point)) {
-                float alpha = ofClamp(point.y, 0, 255);
-                ofSetColor(255, 255, 255, 20);
+//            if (inBoundaries(point)) {
+                ofSetColor(255, 255, 255, 10);
                 ofFill();
                 ofDrawCircle(point.x, -point.z, 2);
-            }
+//            }
         };
         if (mesh1.hasVertices()) {
             auto vertices = mesh1.getVertices();
@@ -176,19 +175,42 @@ void ofApp::update(){
                 merged.addVertex(vertex);
                 
                 ofVec3f point = vertex * mergedTransformation;
-                if(inBoundaries(point)) {
-                    ofSetColor(255, 0, 0, ofClamp(point.y * 2, 0, 255));
+//                if(inBoundaries(point)) {
+                    ofSetColor(255, 255, 255, 10);
                     ofFill();
                     ofDrawCircle(point.x, -point.z, 2);
-                }
+//                }
             }
         }
-        ofDisableBlendMode();
+        
         ofDisableAlphaBlending();
+        ofDisableBlendMode();
         flattened.end();
+        
         ofPixels pixels;
+        ofPixels grayscalePixels;
+        pixels.allocate(flattened.getWidth(), flattened.getHeight(), OF_IMAGE_COLOR_ALPHA);
         flattened.readToPixels(pixels);
-//        contourFinder.findContours(toCv(pixels));
+        grayscalePixels.allocate(pixels.getWidth(), pixels.getHeight(), OF_IMAGE_GRAYSCALE);
+        for (int x = 0; x < pixels.getWidth(); x++) {
+            for(int y = 0; y < pixels.getHeight(); y++) {
+                ofColor bright = pixels.getColor(x, y).getBrightness();
+                grayscalePixels.setColor(x, y, bright);
+            }
+        }
+
+        flatGray.clear();
+        flatGray.setFromPixels(grayscalePixels);
+        contourFinder.findContours(flatGray, 20, 100, 10, false);
+//        ofImage flat;
+//        flat.allocate(pixels.getWidth(), pixels.getHeight(), OF_IMAGE_COLOR_ALPHA);
+//        flat.setFromPixels(pixels);
+//        Mat mat = toCv(flat);
+//        contourFinder.findContours(flat);
+//        toCv(pixels);
+//        cv::Mat hey = cv::Mat
+//        contourFinder.findContours(<#InputOutputArray image#>, <#OutputArrayOfArrays contours#>, <#OutputArray hierarchy#>, <#int mode#>, <#int method#>)
+//        contourFinder.findContours(pixels);
     }
 }
 
@@ -249,15 +271,16 @@ void ofApp::draw(){
         
     }
     if (showMerged) {
-        flattened.draw(0, 0, 1000, 500);
-//        contourFinder.draw();
+//        flattened.draw(0, 0, 1000, 500);
+        contourFinder.draw();
+//        flatGray.draw(0, 0, 1000, 500);
     }
 
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), 10, 20);
     ofDrawBitmapStringHighlight("Device Count : " + ofToString(ofxMultiKinectV2::getDeviceCount()), 10, 40);
     
     ofDisableDepthTest();
-    gui.draw();
+//    gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -313,12 +336,12 @@ void ofApp::keyPressed(int key){
         
         Settings::getFloat("yThreshold") = yThreshold;
         
-        Settings::getFloat("xMin") = xMin;
-        Settings::getFloat("xMax") = xMax;
-        Settings::getFloat("yMin") = yMin;
-        Settings::getFloat("yMax") = yMax;
-        Settings::getFloat("zMin") = zMin;
-        Settings::getFloat("zMax") = zMax;
+//        Settings::getFloat("xMin") = xMin;
+//        Settings::getFloat("xMax") = xMax;
+//        Settings::getFloat("yMin") = yMin;
+//        Settings::getFloat("yMax") = yMax;
+//        Settings::getFloat("zMin") = zMin;
+//        Settings::getFloat("zMax") = zMax;
 
         // save to file
         Settings::get().save("settings.json");
@@ -331,7 +354,6 @@ void ofApp::keyPressed(int key){
     } else if (key == '-') {
         yThreshold -= 10;
     }
-
 }
 
 //--------------------------------------------------------------
