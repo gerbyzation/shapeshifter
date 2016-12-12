@@ -293,11 +293,11 @@ void ofApp::draw(){
     }
     if (showMerged) {
 //        flatGray.draw(0, 0, 1000, 500);
-        contourFinder.draw(0, 0, 1000, 500);
+//        contourFinder.draw(0, 0, 1000, 500);
         ofPushStyle();
         ofSetColor(ofColor::red);
         ofFill();
-        ofDrawCircle(mainBlob.centroid.x, mainBlob.centroid.y, 5);
+//        ofDrawCircle(mainBlob.centroid.x, mainBlob.centroid.y, 5);
         ofVec3f posLeftSensor = ofVec3f(-10+mainBlob.centroid.x, 10 + mainBlob.centroid.y, 0);
         ofVec3f posRightSensor = ofVec3f(10 + mainBlob.centroid.x, 10 + mainBlob.centroid.y, 0);
         ofSetColor(ofColor::blue);
@@ -305,8 +305,8 @@ void ofApp::draw(){
         route.readToPixels(routePixels);
         bool alertLeft = routePixels.getColor(posLeftSensor.x, posLeftSensor.y).getBrightness() == 0;
         bool alertRight = routePixels.getColor(posRightSensor.x, posRightSensor.y).getBrightness() == 0;
-        ofDrawCircle(posLeftSensor, 3);
-        ofDrawCircle(posRightSensor, 3);
+//        ofDrawCircle(posLeftSensor, 3);
+//        ofDrawCircle(posRightSensor, 3);
         ofPopStyle();
 //        route.draw(0, 0, 1000, 500);
         cout << "left alert " << (alertLeft ? "true" : "false") << " right alert: " << (alertRight ? "true" : "false") << endl;
