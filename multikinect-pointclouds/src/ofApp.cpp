@@ -110,60 +110,42 @@ void ofApp::drawRoute(int height) {
     route.end();
 }
 
-//--------------------------------------------------------------
-void ofApp::update(){
-    kinect0.update();
-    if (kinect0.isFrameNew()) {
-        mesh0.clear();
+void loadPixels (ofxMultiKinectV2 & kinect, ofMesh & mesh, float yThreshold, ofColor color) {
+    kinect.update();
+    if (kinect.isFrameNew()) {
+        mesh.clear();
         {
             int step = 2;
-            int h = kinect0.getDepthPixelsRef().getHeight();
-            int w = kinect0.getDepthPixelsRef().getWidth();
-            for(int y = 0; y < h; y += step) {
-                for(int x = 0; x < w; x += step) {
-                    float dist = kinect0.getDistanceAt(x, y);
-                    if(dist > 50 && dist < 500) {
-                        ofMatrix4x4 corr = ofMatrix4x4().newScaleMatrix(-1.0, 1.0, -1.0);
-                        ofVec3f pt = kinect0.getWorldCoordinateAt(x, y, dist) * corr;
-                        if (pt.y < yThreshold) {
-                            ofColor c(0, 0, 255);
-                            mesh0.addColor(c);
-                            mesh0.addVertex(pt);
-                        }
-                       
-                    }
-                }
-            }
-            
-        }
-    }
-    
-    kinect1.update();
-    if (kinect1.isFrameNew()) {
-        mesh1.clear();
-        {
-            int step = 2;
-            int h = kinect1.getDepthPixelsRef().getHeight();
-            int w = kinect1.getDepthPixelsRef().getWidth();
+            int h = kinect.getDepthPixelsRef().getHeight();
+            int w = kinect.getDepthPixelsRef().getWidth();
             for(int y = 0; y < h; y += step) {
                 for (int x = 0; x < w; x += step) {
-                    float dist = kinect1.getDistanceAt(x, y);
+                    float dist = kinect.getDistanceAt(x, y);
                     if(dist > 50 && dist < 500) {
                         ofMatrix4x4 corr = ofMatrix4x4().newScaleMatrix(-1.0, 1.0, -1.0);
-                        ofVec3f pt = kinect1.getWorldCoordinateAt(x, y, dist) * corr;
+                        ofVec3f pt = kinect.getWorldCoordinateAt(x, y, dist) * corr;
                         
                         if (pt.y < yThreshold) {
-                            ofColor c(255, 0, 0);
-                            mesh1.addColor(c);
-                            mesh1.addVertex(pt);
+                            mesh.addColor(color);
+                            mesh.addVertex(pt);
                         }
                     }
                 }
             }
         }
     }
+}
+
+//--------------------------------------------------------------
+void ofApp::update(){
     
-    if (showMerged) {
+    
+    if (!showMerged) {
+        loadPixels(kinect0, mesh0, yThreshold, ofColor::red);
+        loadPixels(kinect1, mesh1, yThreshold, ofColor::blue);
+    } else if (showMerged) {
+        loadPixels(kinect0, mesh0, yThreshold, ofColor::red);
+        loadPixels(kinect1, mesh1, yThreshold, ofColor::blue);
         merged.clear();
         
         flattened.begin();
@@ -235,6 +217,8 @@ void ofApp::update(){
         }
     }
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::draw(){
